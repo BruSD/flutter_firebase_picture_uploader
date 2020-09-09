@@ -15,7 +15,8 @@ class FirebasePictureUploadController {
 
   SharedPreferences persistentKeyValueStore;
 
-  Future<String> receiveURL(String storageURL, {bool useCaching = true}) async {
+  Future<String> receiveURL(String storageURL,
+      {bool useCaching = true, bool storeInCache = true}) async {
     // try getting the download link from persistency
     if (useCaching) {
       try {
@@ -38,14 +39,14 @@ class FirebasePictureUploadController {
           .getDownloadURL();
 
       // cache link
-      if (useCaching) {
+      if (useCaching || storeInCache) {
         await persistentKeyValueStore.setString(storageURL, downloadLink);
       }
 
       // give url to caller
       return downloadLink;
     } on Exception catch (error) {
-      print(error);
+      // print(error);
       // print(stackTrace);
     }
     return null;
