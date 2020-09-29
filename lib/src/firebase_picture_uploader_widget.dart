@@ -313,9 +313,12 @@ class _PictureUploadWidgetState extends State<PictureUploadWidget> {
     final List<SingleProfilePictureUploadWidget> pictureUploadWidgets =
         getCurrentlyUploadedFilesWidgets();
     return new Wrap(
-        spacing: 0.0, // gap between adjacent chips
-        runSpacing: 0.0, // gap between lines
-        direction: Axis.horizontal, // main axis (rows or columns)
+        spacing: 0.0,
+        // gap between adjacent chips
+        runSpacing: 0.0,
+        // gap between lines
+        direction: Axis.horizontal,
+        // main axis (rows or columns)
         runAlignment: WrapAlignment.start,
         children: pictureUploadWidgets);
   }
@@ -425,12 +428,13 @@ class _SingleProfilePictureUploadWidgetState
     if (image == null) {
       return;
     }
-    final imageCropped = await PictureUploadWidget.pictureUploadController
-        .cropImage(File(image.path),
-            widget.pictureUploadWidget.settings.imageManipulationSettings);
-    if (imageCropped == null) {
-      return;
-    }
+    final imageCropped = File(image.path);
+    // = await PictureUploadWidget.pictureUploadController
+    //     .cropImage(File(image.path),
+    //         widget.pictureUploadWidget.settings.imageManipulationSettings);
+    // if (imageCropped == null) {
+    //   return;
+    // }
 
     // update display state
     setState(() {
@@ -610,7 +614,9 @@ class _SingleProfilePictureUploadWidgetState
         existingImageWidget,
         _uploadJob.uploadProcessing
             ? processingIndicator
-            : widget.enableDelete ? deleteButton : Container(),
+            : widget.enableDelete
+                ? deleteButton
+                : Container(),
       ],
     );
   }
@@ -643,7 +649,9 @@ class UploadJob {
   ImageProvider imageProvider; // for existing images
 
   StorageReference _storageReference;
+
   StorageReference get storageReference => _storageReference;
+
   set storageReference(StorageReference storageReference) {
     _storageReference = storageReference;
     if (_storageReference != null &&
@@ -677,6 +685,7 @@ class UploadJob {
   }
 
   int _hashCode;
+
   @override
   int get hashCode {
     return _hashCode ??= id.hashCode;
