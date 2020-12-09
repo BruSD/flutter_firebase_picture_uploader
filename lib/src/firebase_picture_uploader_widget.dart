@@ -5,7 +5,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_web_image_picker/flutter_web_image_picker.dart';
 
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -401,60 +400,60 @@ class _SingleProfilePictureUploadWidgetState
     );
   }
 
-  Future _uploadImageWeb() async {
-    // manipulate image as requested
-    final image = await FlutterWebImagePicker.getImage;
-    if (image == null) {
-      return;
-    }
-    // final imageCropped = File.fromRawPath(image);
-    // = await PictureUploadWidget.pictureUploadController
-    //     .cropImage(File(image.path),
-    //         widget.pictureUploadWidget.settings.imageManipulationSettings);
-    // if (imageCropped == null) {
-    //   return;
-    // }
-
-    // update display state
-    setState(() {
-      _uploadJob.imageProvider = image.image;
-      _uploadJob.uploadProcessing = true;
-    });
-    widget.onPictureChange(_uploadJob);
-
-    // upload image
-    try {
-      // in case of custom upload function, use it
-      if (widget.pictureUploadWidget.settings.customUploadFunction != null) {
-        _uploadJob.storageReference = await widget.pictureUploadWidget.settings
-            .customUploadFunction(image, _uploadJob.id);
-      } else {
-        // else use default one
-        _uploadJob.storageReference = await PictureUploadWidget
-            .pictureUploadController
-            .uploadProfilePicture(
-                _uploadJob.image,
-                widget.pictureUploadWidget.settings.uploadDirectory,
-                _uploadJob.id,
-                widget.pictureUploadWidget.settings.customUploadFunction);
-      }
-    } catch (error, stackTrace) {
-      _uploadJob.image = null;
-      _uploadJob.storageReference = null;
-
-      if (widget.pictureUploadWidget.settings.onErrorFunction != null) {
-        widget.pictureUploadWidget.settings.onErrorFunction(error, stackTrace);
-      } else {
-        print(error);
-        print(stackTrace);
-      }
-    }
-
-    setState(() {
-      _uploadJob.uploadProcessing = false;
-    });
-    widget.onPictureChange(_uploadJob);
-  }
+  // Future _uploadImageWeb() async {
+  //   // manipulate image as requested
+  //   final image = await FlutterWebImagePicker.getImage;
+  //   if (image == null) {
+  //     return;
+  //   }
+  //   // final imageCropped = File.fromRawPath(image);
+  //   // = await PictureUploadWidget.pictureUploadController
+  //   //     .cropImage(File(image.path),
+  //   //         widget.pictureUploadWidget.settings.imageManipulationSettings);
+  //   // if (imageCropped == null) {
+  //   //   return;
+  //   // }
+  //
+  //   // update display state
+  //   setState(() {
+  //     _uploadJob.imageProvider = image.image;
+  //     _uploadJob.uploadProcessing = true;
+  //   });
+  //   widget.onPictureChange(_uploadJob);
+  //
+  //   // upload image
+  //   try {
+  //     // in case of custom upload function, use it
+  //     if (widget.pictureUploadWidget.settings.customUploadFunction != null) {
+  //       _uploadJob.storageReference = await widget.pictureUploadWidget.settings
+  //           .customUploadFunction(image, _uploadJob.id);
+  //     } else {
+  //       // else use default one
+  //       _uploadJob.storageReference = await PictureUploadWidget
+  //           .pictureUploadController
+  //           .uploadProfilePicture(
+  //               _uploadJob.image,
+  //               widget.pictureUploadWidget.settings.uploadDirectory,
+  //               _uploadJob.id,
+  //               widget.pictureUploadWidget.settings.customUploadFunction);
+  //     }
+  //   } catch (error, stackTrace) {
+  //     _uploadJob.image = null;
+  //     _uploadJob.storageReference = null;
+  //
+  //     if (widget.pictureUploadWidget.settings.onErrorFunction != null) {
+  //       widget.pictureUploadWidget.settings.onErrorFunction(error, stackTrace);
+  //     } else {
+  //       print(error);
+  //       print(stackTrace);
+  //     }
+  //   }
+  //
+  //   setState(() {
+  //     _uploadJob.uploadProcessing = false;
+  //   });
+  //   widget.onPictureChange(_uploadJob);
+  // }
 
   Future _uploadImage() async {
     _uploadJob.action = UploadAction.actionUpload;
@@ -606,11 +605,7 @@ class _SingleProfilePictureUploadWidgetState
                     width: 0.0),
                 borderRadius: new BorderRadius.circular(8.0)),
             child: buttonContent),
-        onPressed: !widget.pictureUploadWidget.enabled
-            ? null
-            : (!Platform.isAndroid && !Platform.isIOS)
-                ? _uploadImageWeb
-                : _uploadImage);
+        onPressed: !widget.pictureUploadWidget.enabled ? null : _uploadImage);
   }
 
   Widget getExistingImageWidget() {
