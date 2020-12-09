@@ -403,11 +403,11 @@ class _SingleProfilePictureUploadWidgetState
 
   Future _uploadImageWeb() async {
     // manipulate image as requested
-    final image = await FlutterWebImagePicker.pickImage();
+    final image = await FlutterWebImagePicker.getImage;
     if (image == null) {
       return;
     }
-    final imageCropped = File(image.path);
+    // final imageCropped = File.fromRawPath(image);
     // = await PictureUploadWidget.pictureUploadController
     //     .cropImage(File(image.path),
     //         widget.pictureUploadWidget.settings.imageManipulationSettings);
@@ -417,7 +417,7 @@ class _SingleProfilePictureUploadWidgetState
 
     // update display state
     setState(() {
-      _uploadJob.image = imageCropped;
+      _uploadJob.imageProvider = image.image;
       _uploadJob.uploadProcessing = true;
     });
     widget.onPictureChange(_uploadJob);
@@ -427,13 +427,13 @@ class _SingleProfilePictureUploadWidgetState
       // in case of custom upload function, use it
       if (widget.pictureUploadWidget.settings.customUploadFunction != null) {
         _uploadJob.storageReference = await widget.pictureUploadWidget.settings
-            .customUploadFunction(imageCropped, _uploadJob.id);
+            .customUploadFunction(image, _uploadJob.id);
       } else {
         // else use default one
         _uploadJob.storageReference = await PictureUploadWidget
             .pictureUploadController
             .uploadProfilePicture(
-                imageCropped,
+                _uploadJob.image,
                 widget.pictureUploadWidget.settings.uploadDirectory,
                 _uploadJob.id,
                 widget.pictureUploadWidget.settings.customUploadFunction);
